@@ -3,6 +3,7 @@
 
 /// requires use of C++20 for std::bit_cast
 
+
 void PrintHelp()
 {
 	printf("dumb [numbers..] \nCheck if a number is a perfect power of two.\n");
@@ -11,9 +12,18 @@ void PrintHelp()
 inline bool Acceptible(const int& width)
 {
 	// firstly convert a provided number to a float
-  float num = width;
-  // "safely" interpret float's pointer as an integer and bitwise mask
-  return (std::bit_cast<int>(num) & (8388607)) == 0;
+    float num = width;
+	
+#if __cplusplus == 202002L
+	
+	// "safely" interpret float's pointer as an integer and bitwise mask
+	return (std::bit_cast<int>(num) & (8388607)) == 0;
+	
+#else
+	//unsafe method for use in compiling prior to C++20 aka: "trust me bro"	
+	return (*((int*)&num) & (8388607)) == 0;
+	
+#endif
 }
 
 int main(int argc, char** argv)
